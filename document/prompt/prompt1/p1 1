@@ -1,0 +1,5 @@
+
+- p1 1
+I want to create procedural generation software using javascript and java. frontend will be react with mui. backend will be java with spring boot. database will be sqlite. 
+- workspace - it should be able to have multiple workspace. each workspace will have its own database. it should be able to support multiple database.
+- datasource - it should be able to have multiple datasource. for database 
