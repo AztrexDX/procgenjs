@@ -27,6 +27,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.sql.DataSource;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -240,15 +241,15 @@ public class WorkspaceService {
         // workspaceConfig.setId(workspaceUIListItem.getWsid());
         workspaceConfig.setWorkspaceFolderPath(newWorkspaceFolderPath);
         workspaceConfig.setTitle(workspaceName);
-        workspaceConfig.setLibraryFolderPath(String.format("%s/library", workspaceConfig.getWorkspaceFolderPath()));
+        workspaceConfig.setLibraryFolderPath(String.format("%s/assets/library", workspaceConfig.getWorkspaceFolderPath()));
         workspaceConfig.setConfigurationFolderPath(
                 String.format("%s/configuration", workspaceConfig.getWorkspaceFolderPath()));
         workspaceConfig.setDatabaseFolderPath(String.format("%s/database", workspaceConfig.getWorkspaceFolderPath()));
         workspaceConfig.setFilesPath(String.format("%s/files", workspaceConfig.getWorkspaceFolderPath()));
-        workspaceConfig.setImageFolderPath(String.format("%s/image", workspaceConfig.getWorkspaceFolderPath()));
-        workspaceConfig.setThemeFolderPath(String.format("%s/theme", workspaceConfig.getWorkspaceFolderPath()));
+        workspaceConfig.setImageFolderPath(String.format("%s/assets/image", workspaceConfig.getWorkspaceFolderPath()));
+        workspaceConfig.setThemeFolderPath(String.format("%s/assets/theme", workspaceConfig.getWorkspaceFolderPath()));
         workspaceConfig
-                .setScriptFolderPath(String.format("%s/script/general", workspaceConfig.getWorkspaceFolderPath()));
+                .setScriptFolderPath(String.format("%s/assets/script", workspaceConfig.getWorkspaceFolderPath()));
         workspaceConfig.setWorkspaceJsonPath(
                 String.format("%s/%s", workspaceConfig.getWorkspaceFolderPath(), PathConstant.WORKSPACE_JSON));
         workspaceConfig.setDatabasePath(
@@ -377,6 +378,16 @@ public class WorkspaceService {
             }
         }
         routingDataSource.setTargetDataSources(targetDataSources); // could be removed
+        routingDataSource.afterPropertiesSet();
+    }
+
+    public void addToRoutingDataSource(String key, String dbPath) {
+        routingDataSource.addDataSource(key, DBUtil.createSqliteDataSource(dbPath)); // could be removed
+        routingDataSource.afterPropertiesSet();
+    }
+
+    public void addToRoutingDataSource(String key, DataSource value) {
+        routingDataSource.addDataSource(key, value); // could be removed
         routingDataSource.afterPropertiesSet();
     }
 

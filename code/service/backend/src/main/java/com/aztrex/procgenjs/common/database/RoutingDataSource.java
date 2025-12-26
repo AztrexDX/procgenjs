@@ -9,8 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 import org.springframework.stereotype.Component;
 
+import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @Component
@@ -19,6 +21,7 @@ public class RoutingDataSource extends AbstractRoutingDataSource {
     @Autowired
     private DataSourceContextHolder dataSourceContextHolder;
 
+    private final Map<Object, Object> currentDataSources = new ConcurrentHashMap<>();
 //    @Autowired
 //    @Qualifier("trackerDataSource")
 //    private DataSource trackerDataSource;
@@ -52,6 +55,22 @@ public class RoutingDataSource extends AbstractRoutingDataSource {
         super.afterPropertiesSet();
     }
 
+    /**
+     * Call this method dynamically to add a new Workspace DB
+     */
+    public void addDataSource(String key, DataSource dataSource) {
+        log.info("Dynamically adding DataSource for key: {}", key);
+
+        // 1. Add to our local map
+        this.currentDataSources.put(key, dataSource);
+
+        // 2. Pass the updated map to Spring
+        this.setTargetDataSources(this.currentDataSources);
+
+        // 3. Trigger a refresh of the internal resolvedDataSources
+        // This parses the map and makes the new DataSource active immediately
+        super.afterPropertiesSet();
+    }
 //    @PostConstruct
 //    public void initialize() {
 //        Map<Object, Object> dataSourceMap = new HashMap<>();

@@ -54,7 +54,7 @@ public class WorkspaceConfig implements Serializable {
         filesPath = String.format("%s/files", workspaceFolderPath);
         imageFolderPath = String.format("%s/assets/image", workspaceFolderPath);
         themeFolderPath = String.format("%s/assets/theme", workspaceFolderPath);
-        scriptFolderPath = String.format("%s/assets/script/general", workspaceFolderPath);
+        scriptFolderPath = String.format("%s/assets/script", workspaceFolderPath);
         workspaceJsonPath = String.format("%s/%s", workspaceFolderPath, "workspace.json");
     }
 

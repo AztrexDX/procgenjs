@@ -1,0 +1,24 @@
+{
+  "title": "workspace",
+  "dbname": "data",
+  "configurationFolderPath": ".//workspace/configuration",
+  "databaseFolderPath": ".//workspace/database",
+  "databasePath": ".//workspace/database/data.db",
+  "filesPath": ".//workspace/files",
+  "imageFolderPath": ".//workspace/assets/image",
+  "themeFolderPath": ".//workspace/assets/theme",
+  "scriptFolderPath": ".//workspace/assets/script",
+  "libraryFolderPath": ".//workspace/assets/library",
+  "workspaceFolderPath": ".//workspace",
+  "workspaceJsonPath": ".//workspace/workspace.json",
+  "workspaceNamePathItems": [
+    {
+      "title": "workspace",
+      "path": ".//workspace/workspace.json"
+    }
+  ],
+  "workspaceUISettings": {
+    "theme": "dark",
+    "fontSize": 16
+  }
+}
