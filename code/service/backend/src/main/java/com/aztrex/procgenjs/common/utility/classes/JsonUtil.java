@@ -1,4 +1,4 @@
-package com.aztrex.procgenjs.common.util;
+package com.aztrex.procgenjs.common.utility.classes;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;

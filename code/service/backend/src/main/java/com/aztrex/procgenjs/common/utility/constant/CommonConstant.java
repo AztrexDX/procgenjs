@@ -1,4 +1,4 @@
-package com.aztrex.procgenjs.common.util.constant;
+package com.aztrex.procgenjs.common.utility.constant;
 
 import java.util.HashSet;
 import java.util.Set;

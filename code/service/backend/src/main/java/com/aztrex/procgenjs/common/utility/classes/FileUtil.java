@@ -1,4 +1,4 @@
-package com.aztrex.procgenjs.common.util;
+package com.aztrex.procgenjs.common.utility.classes;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;

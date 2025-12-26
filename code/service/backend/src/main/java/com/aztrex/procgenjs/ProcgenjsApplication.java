@@ -6,10 +6,7 @@ import org.springframework.boot.persistence.autoconfigure.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-@SpringBootApplication(excludeName = {
-		"org.springdoc.core.configuration.SpringDocDataRestConfiguration",
-		"org.springdoc.core.configuration.SpringDocHateoasConfiguration"
-})
+@SpringBootApplication
 @ComponentScan(basePackages = {"com.aztrex.procgenjs"})
 //@EnableJpaRepositories(basePackages = {"com.aztrex.procgenjs", "com.aztrex.common"})
 //@EntityScan(basePackages = {"com.aztrex.procgenjs", "com.aztrex.common"})

@@ -1,6 +1,6 @@
-package com.aztrex.procgenjs.common.util;
+package com.aztrex.procgenjs.common.utility.classes;
 
-import com.aztrex.procgenjs.common.util.constant.CommonConstant;
+import com.aztrex.procgenjs.common.utility.constant.CommonConstant;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.Path;
 import jakarta.persistence.criteria.Predicate;

@@ -1,8 +1,8 @@
 package com.aztrex.procgenjs.common.database;
 
-import com.aztrex.procgenjs.common.util.database.DBUtil;
-import com.aztrex.procgenjs.common.util.constant.PathConstant;
-import com.aztrex.procgenjs.common.util.constant.TrackerConstant;
+import com.aztrex.procgenjs.common.utility.constant.PathConstant;
+import com.aztrex.procgenjs.common.utility.constant.ProcgenjsConstant;
+import com.aztrex.procgenjs.common.utility.database.DBUtil;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,11 +28,11 @@ public class RoutingDataSource extends AbstractRoutingDataSource {
 
 //    public RoutingDataSource() {
 //        Map<Object, Object> dataSourceMap = new HashMap<>();
-//        dataSourceMap.put(TrackerConstant.TRACKER,
-//                DBUtil.createDataSource(PathConstant.TRACKER_DATABASE_PATH));
+//        dataSourceMap.put(ProcgenjsConstant.TRACKER,
+//                DBUtil.createDataSource(PathConstant.PROCGENJS_DATABASE_PATH));
 //        setTargetDataSources(dataSourceMap);
-//        setDefaultTargetDataSource(dataSourceMap.get(TrackerConstant.TRACKER));
-//        dataSourceContextHolder.setBranchContext(TrackerConstant.TRACKER);
+//        setDefaultTargetDataSource(dataSourceMap.get(ProcgenjsConstant.TRACKER));
+//        dataSourceContextHolder.setBranchContext(ProcgenjsConstant.TRACKER);
 //        super.afterPropertiesSet();
 //    }
 
@@ -44,18 +44,18 @@ public class RoutingDataSource extends AbstractRoutingDataSource {
     @PostConstruct
     public void initializePostConstruct() {
         Map<Object, Object> dataSourceMap = new HashMap<>();
-        dataSourceMap.put(TrackerConstant.TRACKER,
-                DBUtil.createDataSource(PathConstant.TRACKER_DATABASE_PATH));
+        dataSourceMap.put(ProcgenjsConstant.PROCGENJS,
+                DBUtil.createDataSource(PathConstant.PROCGENJS_DATABASE_PATH));
         setTargetDataSources(dataSourceMap);
-        setDefaultTargetDataSource(dataSourceMap.get(TrackerConstant.TRACKER));
-        dataSourceContextHolder.setBranchContext(TrackerConstant.TRACKER);
+        setDefaultTargetDataSource(dataSourceMap.get(ProcgenjsConstant.PROCGENJS));
+        dataSourceContextHolder.setBranchContext(ProcgenjsConstant.PROCGENJS);
         super.afterPropertiesSet();
     }
 
 //    @PostConstruct
 //    public void initialize() {
 //        Map<Object, Object> dataSourceMap = new HashMap<>();
-//        dataSourceMap.put(TrackerConstant.TRACKER, trackerDataSource); // Correctly add trackerDataSource
+//        dataSourceMap.put(ProcgenjsConstant.TRACKER, trackerDataSource); // Correctly add trackerDataSource
 //        dataSourceMap.putAll(workspaceDataSourceRegistry.getDataSources());
 //        this.setTargetDataSources(dataSourceMap);
 //        this.setDefaultTargetDataSource(trackerDataSource);

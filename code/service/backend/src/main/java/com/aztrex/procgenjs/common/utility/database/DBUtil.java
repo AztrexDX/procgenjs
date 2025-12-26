@@ -1,4 +1,4 @@
-package com.aztrex.procgenjs.common.util.database;
+package com.aztrex.procgenjs.common.utility.database;
 
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.extern.slf4j.Slf4j;
