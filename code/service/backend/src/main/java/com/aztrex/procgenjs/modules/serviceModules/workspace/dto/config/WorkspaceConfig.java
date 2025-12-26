@@ -19,7 +19,7 @@ public class WorkspaceConfig implements Serializable {
 
     private String id = UUID.randomUUID().toString();
     private String title = "workspace";
-    private String dbname = "tracker";
+    private String dbname = "procgenjs";
     private String configurationFolderPath;
     private String databaseFolderPath;
     private String databasePath;
@@ -48,13 +48,13 @@ public class WorkspaceConfig implements Serializable {
 
     private void setUpPaths() {
         configurationFolderPath = String.format("%s/configuration", workspaceFolderPath);
-        libraryFolderPath = String.format("%s/library", workspaceFolderPath);
+        libraryFolderPath = String.format("%s/assets/library", workspaceFolderPath);
         databaseFolderPath = String.format("%s/database", workspaceFolderPath);
         databasePath = String.format("%s/%s.db", databaseFolderPath, dbname);
         filesPath = String.format("%s/files", workspaceFolderPath);
-        imageFolderPath = String.format("%s/image", workspaceFolderPath);
-        themeFolderPath = String.format("%s/theme", workspaceFolderPath);
-        scriptFolderPath = String.format("%s/script/general", workspaceFolderPath);
+        imageFolderPath = String.format("%s/assets/image", workspaceFolderPath);
+        themeFolderPath = String.format("%s/assets/theme", workspaceFolderPath);
+        scriptFolderPath = String.format("%s/assets/script/general", workspaceFolderPath);
         workspaceJsonPath = String.format("%s/%s", workspaceFolderPath, "workspace.json");
     }
 
