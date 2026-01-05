@@ -1,9 +1,11 @@
 {
+  "id": "",
+  "itemId": "",
   "title": "workspace",
-  "dbname": "data",
+  "dbname": "pgdata",
   "configurationFolderPath": ".//workspace/configuration",
   "databaseFolderPath": ".//workspace/database",
-  "databasePath": ".//workspace/database/data.db",
+  "databasePath": ".//workspace/database/pgdata.db",
   "filesPath": ".//workspace/files",
   "imageFolderPath": ".//workspace/assets/image",
   "themeFolderPath": ".//workspace/assets/theme",
@@ -12,10 +14,7 @@
   "workspaceFolderPath": ".//workspace",
   "workspaceJsonPath": ".//workspace/workspace.json",
   "workspaceNamePathItems": [
-    {
-      "title": "workspace",
-      "path": ".//workspace/workspace.json"
-    }
+
   ],
   "workspaceUISettings": {
     "theme": "dark",

@@ -3,7 +3,7 @@ package com.aztrex.procgenjs.common.utility.constant;
 public class PathConstant {
     // folder
     public static final String DATA_PATH = "./dataFolder";
-    public static final String PROCGENJS_DATABASE_PATH = "./dataFolder/database/procgenjs.db";
+    public static final String PROCGENJS_DATABASE_PATH = "./dataFolder/database/procgenjs";
     public static final String WORKSPACE_TEMPLATE_PATH = "/assets/template";
     public static final String WORKSPACE_TEMPLATE_PATH_TO_COPY = DATA_PATH + WORKSPACE_TEMPLATE_PATH + "/procgenjs/workspace";
 

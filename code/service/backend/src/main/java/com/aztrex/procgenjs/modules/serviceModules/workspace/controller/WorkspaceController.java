@@ -1,5 +1,7 @@
 package com.aztrex.procgenjs.modules.serviceModules.workspace.controller;
 
+import com.aztrex.procgenjs.common.utility.classes.JsonUtil;
+import com.aztrex.procgenjs.common.utility.constant.PathConstant;
 import com.aztrex.procgenjs.modules.serviceModules.workspace.database.model.WorkspaceRecord;
 import com.aztrex.procgenjs.modules.serviceModules.workspace.dto.model.WorkspaceUIListItem;
 import com.aztrex.procgenjs.modules.serviceModules.workspace.service.WorkspaceService;
@@ -9,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -84,6 +87,21 @@ public class WorkspaceController {
 
         return response;
     }
+
+    @GetMapping(value = "/getWorkspaceConfigById")
+    public Object getWorkspaceConfigById(@RequestParam(value = "id") Long id) throws IOException {
+        WorkspaceRecord record = service.getById(id);
+        return JsonUtil.getJsonByFilePath(record.getPath() + File.separator + record.getTitle()
+                + File.separator + PathConstant.WORKSPACE_JSON);
+    }
+
+    @GetMapping(value = "/getWorkspaceConfigByItemId")
+    public Object getWorkspaceConfigByItemId(@RequestParam(value = "itemId") String itemId) throws IOException {
+        WorkspaceRecord record = service.getByItemId(itemId);
+        return JsonUtil.getJsonByFilePath(record.getPath() + File.separator + record.getTitle()
+                + File.separator + PathConstant.WORKSPACE_JSON);
+    }
+
 
     // @RequestMapping(value="/getProjectsIdAndName", method=RequestMethod.GET)
     // public List<ProjectNameAndId> findProjectsIdAndName() {

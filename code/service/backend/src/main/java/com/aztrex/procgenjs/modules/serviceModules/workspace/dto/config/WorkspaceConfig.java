@@ -2,8 +2,10 @@ package com.aztrex.procgenjs.modules.serviceModules.workspace.dto.config;
 
 import com.aztrex.procgenjs.common.utility.constant.CommonConstant;
 import com.aztrex.procgenjs.modules.serviceModules.workspace.dto.model.WorkspaceNamePathItem;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Configuration;
 
 import java.io.Serializable;
@@ -14,12 +16,14 @@ import java.util.UUID;
 @Setter
 @Getter
 @Configuration
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class WorkspaceConfig implements Serializable {
     // private DataSourceConfig dataSourceConfig = new DataSourceConfig();
 
     private String id = UUID.randomUUID().toString();
+    private String itemId = StringUtils.EMPTY;
     private String title = "workspace";
-    private String dbname = "procgenjs";
+    private String dbname = "pgdata";
     private String configurationFolderPath;
     private String databaseFolderPath;
     private String databasePath;
@@ -29,8 +33,9 @@ public class WorkspaceConfig implements Serializable {
     private String scriptFolderPath;
     private String libraryFolderPath;
     private String workspaceFolderPath = String.format("%s/%s", "./", title);
-    private String workspaceJsonPath = String.format("%s%s%s", workspaceFolderPath, title,
-            CommonConstant.JSON_EXTENSION);
+    private String workspaceJsonFileName = title + CommonConstant.JSON_EXTENSION;
+    private String workspaceJsonPath = String.format("%s%s", workspaceFolderPath, workspaceJsonFileName);
+
 
     private List<WorkspaceNamePathItem> workspaceNamePathItems = new ArrayList<>();
     // private WorkspaceUISettings workspaceUISettings = new WorkspaceUISettings();

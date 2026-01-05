@@ -3,6 +3,7 @@ package com.aztrex.procgenjs.modules.serviceModules.workspace.service;
 import com.aztrex.procgenjs.common.database.RoutingDataSource;
 import com.aztrex.procgenjs.common.utility.classes.FileUtil;
 import com.aztrex.procgenjs.common.utility.classes.JavaUtil;
+import com.aztrex.procgenjs.common.utility.classes.JsonUtil;
 import com.aztrex.procgenjs.common.utility.constant.CommonConstant;
 import com.aztrex.procgenjs.common.utility.constant.PathConstant;
 import com.aztrex.procgenjs.common.utility.constant.ProcgenjsConstant;
@@ -12,6 +13,8 @@ import com.aztrex.procgenjs.modules.serviceModules.workspace.database.model.Work
 import com.aztrex.procgenjs.modules.serviceModules.workspace.database.repository.WorkspaceRepository;
 import com.aztrex.procgenjs.modules.serviceModules.workspace.dto.config.WorkspaceConfig;
 import com.aztrex.procgenjs.modules.serviceModules.workspace.dto.model.WorkspaceUIListItem;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.annotation.PostConstruct;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -56,6 +59,8 @@ public class WorkspaceService {
 
     @Autowired
     private RoutingDataSource routingDataSource;
+
+    private static ObjectMapper objectMapper = JsonUtil.objectMapper;
 
     Pageable paging;
     Specification<WorkspaceRecord> specification;
@@ -105,6 +110,11 @@ public class WorkspaceService {
         WorkspaceRecord record = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Workspace not found"));
         return record;
+    }
+
+    public WorkspaceRecord getByItemId(String itemId) {
+        return repository.findByItemId(itemId)
+                .orElseThrow(() -> new RuntimeException("Workspace not found with Item ID: " + itemId));
     }
 
     public List<WorkspaceRecord> getAll() {
@@ -204,7 +214,7 @@ public class WorkspaceService {
     // }
     //
     // WorkspaceConfig workspaceConfig =
-    // FileUtil.loadFromFile(workspaceJsonPath.toFile(), WorkspaceConfig.class);
+    // FileUtil.getJsonFromFileForClass(workspaceJsonPath.toFile(), WorkspaceConfig.class);
     //
     // String newWorkspaceFolderPath = destinationPath.toAbsolutePath().toString();
     // workspaceConfig.setWorkspaceFolderPath(newWorkspaceFolderPath);
@@ -226,37 +236,47 @@ public class WorkspaceService {
     private void updateWorkspaceJsonPaths(Path destinationPath, String workspaceName) throws IOException {
         // Construct the path to the workspace.json file
         Path workspaceJsonPath = destinationPath.resolve(PathConstant.WORKSPACE_JSON);
+        File jsonFile = workspaceJsonPath.toFile();
 
-        // Check if the workspace.json file exists
-        if (!Files.exists(workspaceJsonPath)) {
-            throw new IOException(
-                    "workspace.json not found in the copied directory: " + workspaceJsonPath.toAbsolutePath());
+        // Check if the file exists
+        if (!jsonFile.exists()) {
+            throw new IOException("workspace.json not found: " + workspaceJsonPath.toAbsolutePath());
         }
 
-        // Load the WorkspaceConfig from the JSON file
-        WorkspaceConfig workspaceConfig = FileUtil.loadFromFile(workspaceJsonPath.toFile(), WorkspaceConfig.class);
+        // 1. Load as POJO (To keep your setter logic clean)
+        WorkspaceConfig workspaceConfig = FileUtil.getJsonFromFileForClass(jsonFile, WorkspaceConfig.class);
 
-        // Update the paths
+        // --- Perform your existing Logic ---
         String newWorkspaceFolderPath = destinationPath.toAbsolutePath().toString();
-        // workspaceConfig.setId(workspaceUIListItem.getWsid());
+
         workspaceConfig.setWorkspaceFolderPath(newWorkspaceFolderPath);
         workspaceConfig.setTitle(workspaceName);
-        workspaceConfig.setLibraryFolderPath(String.format("%s/assets/library", workspaceConfig.getWorkspaceFolderPath()));
-        workspaceConfig.setConfigurationFolderPath(
-                String.format("%s/configuration", workspaceConfig.getWorkspaceFolderPath()));
-        workspaceConfig.setDatabaseFolderPath(String.format("%s/database", workspaceConfig.getWorkspaceFolderPath()));
-        workspaceConfig.setFilesPath(String.format("%s/files", workspaceConfig.getWorkspaceFolderPath()));
-        workspaceConfig.setImageFolderPath(String.format("%s/assets/image", workspaceConfig.getWorkspaceFolderPath()));
-        workspaceConfig.setThemeFolderPath(String.format("%s/assets/theme", workspaceConfig.getWorkspaceFolderPath()));
-        workspaceConfig
-                .setScriptFolderPath(String.format("%s/assets/script", workspaceConfig.getWorkspaceFolderPath()));
-        workspaceConfig.setWorkspaceJsonPath(
-                String.format("%s/%s", workspaceConfig.getWorkspaceFolderPath(), PathConstant.WORKSPACE_JSON));
+
+        // Use the getters from config so your String.format logic remains consistent
+        workspaceConfig.setLibraryFolderPath(String.format("%s/assets/library", newWorkspaceFolderPath));
+        workspaceConfig.setConfigurationFolderPath(String.format("%s/configuration", newWorkspaceFolderPath));
+        workspaceConfig.setDatabaseFolderPath(String.format("%s/database", newWorkspaceFolderPath));
+        workspaceConfig.setFilesPath(String.format("%s/files", newWorkspaceFolderPath));
+        workspaceConfig.setImageFolderPath(String.format("%s/assets/image", newWorkspaceFolderPath));
+        workspaceConfig.setThemeFolderPath(String.format("%s/assets/theme", newWorkspaceFolderPath));
+        workspaceConfig.setScriptFolderPath(String.format("%s/assets/script", newWorkspaceFolderPath));
+        workspaceConfig.setWorkspaceJsonPath(String.format("%s/%s", newWorkspaceFolderPath, PathConstant.WORKSPACE_JSON));
+
+        // Careful with databasePath: usually dbname comes from the object itself,
+        // so ensure workspaceConfig.getDbname() is populated.
         workspaceConfig.setDatabasePath(
                 String.format("%s/%s.db", workspaceConfig.getDatabaseFolderPath(), workspaceConfig.getDbname()));
 
-        // Save the updated WorkspaceConfig back to the JSON file
-        FileUtil.saveToFile(workspaceConfig, workspaceJsonPath.toFile());
+        // 2. Load as ObjectNode (This holds the "Unmapped" data)
+        ObjectNode rootNode = (ObjectNode) objectMapper.readTree(jsonFile);
+
+        // 3. MAGIC STEP: Update the Tree with the POJO values
+        // This overwrites only the fields present in WorkspaceConfig,
+        // leaving 'unknown' fields in rootNode untouched.
+        objectMapper.updateValue(rootNode, workspaceConfig);
+
+        // 4. Save the Tree (instead of the POJO)
+        objectMapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile, rootNode);
     }
 
     public void removeWorkspace(Long id) {
@@ -395,7 +415,7 @@ public class WorkspaceService {
         Path jsonPath = Paths.get(record.getPath(), record.getTitle(), PathConstant.WORKSPACE_JSON_SUB_PATH);
         File jsonFile = jsonPath.toFile();
         if (jsonFile.exists()) {
-            return FileUtil.loadFromFile(jsonFile, WorkspaceConfig.class);
+            return FileUtil.getJsonFromFileForClass(jsonFile, WorkspaceConfig.class);
         } else {
             log.warn("Workspace config JSON not found: {}", jsonPath);
             return null;

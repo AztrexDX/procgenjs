@@ -118,7 +118,7 @@ public class FileUtil {
     }
 //
     // Static method to load an object from a JSON file
-    public static <T> T loadFromFile(File file, Class<T> clazz) throws IOException {
+    public static <T> T getJsonFromFileForClass(File file, Class<T> clazz) throws IOException {
         return JsonUtil.objectMapper.readValue(file, clazz);
     }
 //
